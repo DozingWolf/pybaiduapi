@@ -123,3 +123,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+# private conf
+conf/para.conf
+storage/Token.db
+# test progream
+testjob.py
+# private demodata
+demodata
