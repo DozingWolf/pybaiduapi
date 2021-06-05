@@ -28,6 +28,7 @@ def getBaiduToken(conf_path):
         urlFlag,urlData = requestsAIToken(ai_ak,ai_sk)
         print('urlflag : ',urlFlag)
         print('urlData : ',urlData)
+        rtnToken = urlData[0]
         insertSql = 'INSERT INTO Token(tokentype,accesstoken,accesskey) VALUES(?,?,?)'
         insertPara = ('BaiduAI',urlData[0],urlData[1])
         try:
@@ -48,6 +49,7 @@ def getBaiduToken(conf_path):
             dbCursor.execute(selectSql,(dbSqlParaTokenType,))
             dbReturn = dbCursor.fetchall()
             print('sql result = ',dbReturn)
+            rtnToken = dbReturn[0][0]
         else:
             print('DB hasn`t data')
             urlFlag,urlData = requestsAIToken(ai_ak,ai_sk)
@@ -56,6 +58,7 @@ def getBaiduToken(conf_path):
                 insertPara = ('BaiduAI',urlData[0],urlData[1])
                 dbCursor.execute(insertSql,insertPara)
                 dbHandle.commit()
+                rtnToken = urlData[0]
                 if dbCursor.rowcount == 1:
                     pass
                 else:
@@ -64,6 +67,7 @@ def getBaiduToken(conf_path):
                 raise Exception(''.join(urlData))
     dbCursor.close()
     dbHandle.commit()
+    return rtnToken
 
     
 def requestsAIToken(akkey,skkey):

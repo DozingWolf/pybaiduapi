@@ -1,7 +1,9 @@
 import os.path
+from tempfile import TemporaryFile,TemporaryDirectory
+import fitz
 from PIL import Image
 
-def getFileSize(fpath,unit='KB'):
+def getFileSize(fpath:str,unit:str='KB'):
     
     if unit == 'KB':
         # return filesize by KB
@@ -14,7 +16,7 @@ def getFileSize(fpath,unit='KB'):
     else:
         return -1
     
-def resizeImage(ipath,ratio=0.75,saveflag='N'):
+def resizeImage(ipath:str,ratio:float=0.75,saveflag:bool=False):
     if ratio > 1:
         raise Exception('customize resizeImage function only can make a pic small')
     i = Image.open(ipath)
@@ -24,10 +26,31 @@ def resizeImage(ipath,ratio=0.75,saveflag='N'):
     nIw = int(iw*ratio)
     nIh = int(ih*ratio)
     i = i.resize((nIw,nIh),Image.ANTIALIAS)
-    if saveflag == 'N':
+    if saveflag == False:
         return 0,i
-    elif saveflag == 'Y':
+    elif saveflag == True:
         i.save(fileName,fileType)
         return 0,i
     else:
         raise Exception('Error saveflag has been input')
+
+def pdfToImg(ppath:str,zoomrate:float=1.3333,saveflag:bool=False,savepath:str=''):
+    pdfFile = fitz.open(ppath)
+    transImgList = []
+    print(pdfFile.pageCount)
+    with TemporaryDirectory() as tempDirPath:
+        print(tempDirPath)
+        for i in range(pdfFile.pageCount):
+            aPDFPage = pdfFile[i]
+            enlarge = fitz.Matrix(zoomrate,zoomrate).preRotate(int(0))
+            aPixPage = aPDFPage.getPixmap(matrix=enlarge, alpha=False)
+            if saveflag == False:
+                tempImgFile = ''.join([tempDirPath,str(i),'.png'])
+                aPixPage.writePNG(tempImgFile)
+                # transImgList.append(aPixPage)
+                return tempDirPath
+            else:
+                saveFile = ''.join([savepath,'\\',str(i),'.png'])
+                print(saveFile)
+                aPixPage.writePNG(saveFile)
+                return -1
