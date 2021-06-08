@@ -1,7 +1,10 @@
+from os import error,listdir
 import os.path
 from tempfile import TemporaryFile,TemporaryDirectory
 import fitz
 from PIL import Image
+from configparser import ConfigParser
+import json
 
 def getFileSize(fpath:str,unit:str='KB'):
     
@@ -54,3 +57,40 @@ def pdfToImg(ppath:str,zoomrate:float=1.3333,saveflag:bool=False,savepath:str=''
                 print(saveFile)
                 aPixPage.writePNG(saveFile)
                 return -1
+
+def getSourceFilePath(parafile:str):
+    try:
+        paraLoader = ConfigParser()
+        paraLoader.read(parafile)
+        filepath = paraLoader.get('source','path')
+        return filepath
+    except Exception as err:
+        print('getSourceFilePath error:')
+        print(err) 
+
+def overtraversalFile(dirpath:str):
+    fileset = listdir(dirpath)
+    print(fileset)
+    return fileset
+
+def getOutputPath(parafile:str):
+    try:
+        paraLoader = ConfigParser()
+        paraLoader.read(parafile)
+        filepath = paraLoader.get('output','path')
+        return filepath
+    except Exception as err:
+        print('getOutputPath error:')
+        print(err)
+
+def changeResult2Data(indata):
+    if type(indata) == 'dict':
+        rtnData = json.dumps(indata)
+    elif type(indata) == 'tuple':
+        rtnData = '/'.join(indata)
+    return rtnData
+
+def writeData2File(fpath,fname,indata):
+    filePath = ''.join([fpath,fname])
+    with open(filePath,'w') as f:
+        f.write(indata)
