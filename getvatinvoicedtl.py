@@ -45,9 +45,9 @@ def getVATInvoice(token:str,imgpath:str,dtlflag:bool=False):
         else:
             resultData = rtnData.get('words_result')
             rstList = [
-                resultData.get('InvoiceNum'),resultData.get('InvoiceCode'),resultData.get('InvoiceType'),
+                resultData.get('InvoiceNum'),resultData.get('InvoiceCode'),resultData.get('InvoiceTypeOrg'),
                 resultData.get('InvoiceDate'),resultData.get('SellerName'),resultData.get('TotalAmount'),
-                resultData.get('TotalTax'),resultData.get('Remarks')
+                resultData.get('TotalTax'),resultData.get('AmountInFiguers'),resultData.get('Remarks')
             ]
     except Exception as err:
         print(err)
