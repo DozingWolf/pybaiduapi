@@ -84,10 +84,15 @@ def getOutputPath(parafile:str):
         print(err)
 
 def changeResult2Data(indata):
-    if type(indata) == 'dict':
+    if type(indata) == dict:
         rtnData = json.dumps(indata)
-    elif type(indata) == 'tuple':
-        rtnData = '/'.join(indata)
+    elif type(indata) == tuple:
+        rtnData = '\n'.join(indata)
+    elif type(indata) == list:
+        rtnData = '\n'.join(indata)
+    else:
+        datatype = type(indata)
+        raise Exception('Error indata with changeResult2Data ,indata type =',datatype,' ,indata =',indata)
     return rtnData
 
 def writeData2File(fpath,fname,indata):
