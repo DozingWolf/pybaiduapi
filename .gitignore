@@ -130,3 +130,5 @@ storage/Token.db
 testjob.py
 # private demodata
 demodata
+input/
+output/
