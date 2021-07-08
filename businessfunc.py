@@ -18,7 +18,7 @@ def VAT2TXT(parameter:str):
         dtlflag=False
         )
         if data[0] == 0:
-            rtnDataset.append('/'.join(data[1]))
+            rtnDataset.append(','.join(data[1]))
         else:
             raise Exception('error message = ',data)
     print(rtnDataset)

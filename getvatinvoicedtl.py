@@ -44,10 +44,16 @@ def getVATInvoice(token:str,imgpath:str,dtlflag:bool=False):
             raise Exception(rtnData.get('error_code'),rtnData.get('error_msg'))
         else:
             resultData = rtnData.get('words_result')
+            # make a special list for baiwang invoice scaner page
+            # change data style
+            newDateStyle = ''.join(list(filter(str.isdigit,resultData.get('InvoiceDate'))))
             rstList = [
-                resultData.get('InvoiceNum'),resultData.get('InvoiceCode'),resultData.get('InvoiceTypeOrg'),
-                resultData.get('InvoiceDate'),resultData.get('SellerName'),resultData.get('TotalAmount'),
-                resultData.get('TotalTax'),resultData.get('AmountInFiguers'),resultData.get('Remarks')
+                '01','01',
+                resultData.get('InvoiceCode'),resultData.get('InvoiceNum'),
+                resultData.get('TotalAmount'),newDateStyle,
+                '','79E5',''
+                #,'|||',resultData.get('SellerName'),resultData.get('InvoiceTypeOrg'),
+                #resultData.get('TotalTax'),resultData.get('AmountInFiguers'),resultData.get('Remarks')
             ]
     except Exception as err:
         print(err)
