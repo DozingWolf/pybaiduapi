@@ -2,6 +2,7 @@ from customizetool import *
 from getvatinvoicedtl import *
 from getgenericocr import *
 from getbaidutoken import *
+from transimage2excel import *
 
 def VAT2TXT(parameter:str):
     tokenstr = getBaiduToken(conf_path=parameter)
@@ -27,3 +28,21 @@ def VAT2TXT(parameter:str):
 
 def OCR2TXT():
     pass
+
+def IMG2EXCEL(parameter:str):
+    tokenstr = getBaiduToken(conf_path=parameter)
+    inpath = getSourceFilePath(parafile=parameter)
+    outputpath = getOutputPath(parafile=parameter)
+    fileset = overtraversalFile(dirpath=inpath)
+    rtnDataset = []
+    for file in fileset:
+        resultpath = ''.join([inpath,file])
+        data = postIMG(
+            token=tokenstr,
+            imgpath=resultpath
+            )
+        if data[0] == 0:
+            rtnDataset.append(','.join(data[1]))
+        else:
+            raise Exception('error message = ',data)
+    print(rtnDataset)
