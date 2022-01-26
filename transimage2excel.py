@@ -41,15 +41,42 @@ def postIMG(token:str,imgpath:str):
             rstList = [rtnData.get('error_code'),rtnData.get('error_msg')]
             raise Exception(rtnData.get('error_code'),rtnData.get('error_msg'))
         else:
+            # print('GET RESULT DATA !')
+            # print(rtnData)
+            # print('type of rtnData:',type(rtnData))
             resultData = rtnData.get('result')
             # make a special list for baiwang invoice scaner page
             # change data style
-            newDateStyle = ''.join(list(filter(str.isdigit,resultData.get('InvoiceDate'))))
+            # newDateStyle = ''.join(list(filter(str.isdigit,resultData[0].get('request_id'))))
             
     except Exception as err:
         print(err)
 
     return 0,rtnData
 
-def getTransData(token:str,requestid:str):
-    pass
+def getTransData(token:str,requestid:list):
+    apiUrl = 'https://aip.baidubce.com/rest/2.0/solution/v1/form_ocr/get_request_result'
+    apiUrlheaders = {
+        'content-type':'application/x-www-form-urlencoded'
+    }
+    apiUrlPara = {
+        'access_token':token
+    }
+    if len(requestid) == 0:
+        raise Exception('No input request id! check input arg')
+    else :
+        for rid in requestid:
+            apiUrlPara.update({'request_id':rid,'result_type':'excel'})
+            try:
+                r = requests.post(url=apiUrl,data=apiUrlPara,headers=apiUrlheaders)
+                rtnData = r.json()
+                print(rtnData)
+                if rtnData.get('error_code') is not None:
+                    rstList = [rtnData.get('error_code'),rtnData.get('error_msg')]
+                    raise Exception(rtnData.get('error_code'),rtnData.get('error_msg'))
+                else:
+                    resultData = rtnData.get('result')
+                    print(resultData)
+            except Exception as err:
+                print(err)
+        return 0,resultData

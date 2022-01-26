@@ -1,3 +1,5 @@
+from lib2to3.pgen2 import token
+from urllib import request
 from customizetool import *
 from getvatinvoicedtl import *
 from getgenericocr import *
@@ -41,8 +43,17 @@ def IMG2EXCEL(parameter:str):
             token=tokenstr,
             imgpath=resultpath
             )
+        print(data,'type of :',type(data))
         if data[0] == 0:
-            rtnDataset.append(','.join(data[1]))
+            rtnDataset.append(data[1].get('result')[0].get('request_id'))
         else:
             raise Exception('error message = ',data)
-    print(rtnDataset)
+    # getdata = getTransData(token=tokenstr,requestid=rtnDataset)
+    print('post img request rtn data is:',rtnDataset)
+    # print('get excel data request rtn data is:',getdata)
+    return rtnDataset
+
+def GETOCREXCEL(parameter:str,ridset:list):
+    tokenstr = getBaiduToken(conf_path=parameter)
+    getdata = getTransData(token=tokenstr,requestid=ridset)
+    print('get excel data request rtn data is:',getdata)
