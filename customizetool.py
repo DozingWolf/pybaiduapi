@@ -2,6 +2,7 @@ from os import error,listdir
 import os.path
 from tempfile import TemporaryFile,TemporaryDirectory
 import fitz
+from fitz import open,Matrix,preRotate
 from PIL import Image
 from configparser import ConfigParser
 import json
